@@ -1,0 +1,10 @@
+<h1>Coda</h1>
+
+<div ng-init="init()">
+	<ul>
+		<li ng-repeat="room in rooms">
+			<span ng-bind="room.name"></span>
+			<button class="btn btn-default" ng-click="enterRoom(room.id)">Enter</button>
+		</li>
+	</ul>
+</div>
