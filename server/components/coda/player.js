@@ -3,9 +3,9 @@ var redis = require('../redis');
 
 var Player = function (socket) {
 	var session = socket.session;
-	this.id = session.id
-	this.name = session.name
-	this.roomId = null;
+	this.id = session.id;
+	this.name = session.name;
+	this.roomId = session.roomId;
 	this.socket = socket;
 };
 
@@ -26,7 +26,7 @@ Player.prototype.createRoom = function(name, callback) {
 };
 
 Player.prototype.join = function(room, callback) {
-	if (this.roomId) return callback(new Error('Already in room', this.roomId));
+	if (this.roomId) return callback(new Error('Already in room ' + this.roomId));
 
 	var that = this;
 	this.roomId = room.id;

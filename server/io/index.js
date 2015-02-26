@@ -12,7 +12,7 @@ module.exports = function(server) {
   var io = require('socket.io')(server);
 
   io.use(function(socket, next){
-    socket.cookies = cookie.parse(socket.request.headers.cookie);
+    socket.cookies = socket.request.headers.cookie ? cookie.parse(socket.request.headers.cookie) : {};
     next();
   });
 

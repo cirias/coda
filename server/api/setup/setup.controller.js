@@ -11,9 +11,8 @@ exports.index = function(req, res, next) {
 		name: req.body.name
 	}, function (err) {
 		if (err) return next(err);
-		var timestamp = Date.now() + 900000;
-		res.cookie('session_id', id, {expires: new Date(timestamp)});
-		redis.expireat('session:' + id, parseInt(timestamp / 1000), function (err) {
+		res.cookie('session_id', id, {expires: new Date(Date.now() + 86400000)});
+		redis.expireat('session:' + id, parseInt(Date.now() / 1000) + 86400, function (err) {
 			if (err) return next(err);
 			res.send('ok');
 		});
