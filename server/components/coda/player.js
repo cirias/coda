@@ -18,31 +18,34 @@ Player.prototype.save = function(callback) {
 };
 
 Player.prototype.createRoom = function(name, callback) {
+	var that = this;
 	var room = new Room(name, function (err) {
 		if (err) return callback(err);
-		this.join(room, callback);
+		that.join(room, callback);
 	});
 };
 
 Player.prototype.join = function(room, callback) {
 	if (this.roomId) return callback(new Error('Already in room', this.roomId));
 
+	var that = this;
 	this.roomId = room.id;
 	this.socket.join('room:' + this.roomId);
 	this.save(function (err) {
 		if (err) return callback(err);
-		room.addMember(this, callback);
+		room.addMember(that, callback);
 	});
 };
 
 Player.prototype.leave = function(callback) {
 	if (!this.roomId) return callback();
 	this.socket.leave('room:' + this.roomId);
-	var room = new Room(this.roomId);
-	this.roomId = null;
-	this.save(function (err) {
-		if (err) return callback(err);
-		room.removeMember(this, callback);
+	var room = new Room(this.roomId, true, function () {
+		this.roomId = null;
+		this.save(function (err) {
+			if (err) return callback(err);
+			room.removeMember(this, callback);
+		});
 	});
 };
 

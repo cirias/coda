@@ -8,11 +8,11 @@ module.exports = function(nsp) {
   nsp.on('connection', function(socket){
     var player = socket.player;
 
-    socket.on('create room', function (name) {
-      player.createRoom(name, function (err) {
-        if (err) return socket.emit('error', err);
-        nsp.sockets.emit('room created', player.room);
-      });
+    socket.on('create room', function (params) {
+        player.createRoom(params.name, function (err) {
+            if (err) return socket.emit('error', err);
+            nsp.sockets.emit('room created', player.room);
+        });
     });
 
     // socket.on('join room', function (roomId) {
