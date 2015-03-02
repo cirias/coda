@@ -4,9 +4,13 @@
 // ==================================
 module.exports = {
   // MongoDB connection options
-  mongo: {
-    uri: 'mongodb://localhost/coda-dev'
-  },
+  // mongo: {
+  //   uri: 'mongodb://localhost/coda-dev'
+  // },
 
-  seedDB: true
+  seedDB: true,
+
+  redis: {
+  	expiration: 86400
+  }
 };
