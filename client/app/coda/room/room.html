@@ -1,0 +1,16 @@
+<div class="col-xs-12">
+	<div class="row line bg-info" ng-repeat="(id, player) in room.players">
+    <div class="col-xs-7 text">
+      <span ng-bind="player.name"></span>
+    </div>
+    <div class="col-xs-2" ng-show="player.id == $cookies.player_id">
+      <input type="button" value="Leave" class="btn btn-primary" ng-click="leaveRoom()">
+    </div>
+    <div class="col-xs-2 col-xs-offset-2 text" ng-show="player.id != $cookies.player_id">
+      <small>{{player.ready ? 'Ready' : 'Unready'}}</small>
+    </div>
+    <div class="col-xs-2" ng-show="player.id == $cookies.player_id">
+      <input type="button" value="{{ready ? 'Unready' : 'Ready'}}" class="btn btn-primary" ng-click="toggleReady()">
+    </div>
+  </div>
+</div>

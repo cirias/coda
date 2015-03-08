@@ -1,16 +1,16 @@
 'use strict';
 
-describe('Controller: SetupCtrl', function () {
+describe('Controller: CodaDefaultCtrl', function () {
 
   // load the controller's module
   beforeEach(module('codaApp'));
 
-  var SetupCtrl, scope;
+  var CodaDefaultCtrl, scope;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope) {
     scope = $rootScope.$new();
-    SetupCtrl = $controller('SetupCtrl', {
+    CodaDefaultCtrl = $controller('CodaDefaultCtrl', {
       $scope: scope
     });
   }));

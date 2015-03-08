@@ -30,7 +30,7 @@ Room.prototype.update = function(room, callback) {
 };
 
 Room.prototype.retrieve = function(roomId, callback) {
-  this.redis.get('room:' + room.id, function (err, data) {
+  this.redis.get('room:' + roomId, function (err, data) {
     if (err) return callback(err);
     callback(null, JSON.parse(data));
   });
