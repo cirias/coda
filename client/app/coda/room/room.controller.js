@@ -6,27 +6,34 @@ angular.module('codaApp')
     $scope.room = Room.get({
       id: $stateParams.id
     }, function () {
-      socketIo.on('player joined', function (player) {
+      socketIo.on('player joined', function () {
         $scope.room = Room.get({
           id: $stateParams.id
         });
       });
 
-      socketIo.on('player left', function (player) {
+      socketIo.on('player left', function () {
         $scope.room = Room.get({
           id: $stateParams.id
         });
       });
 
       socketIo.on('ready toggled', function (player) {
+        player = CircularJSON.parse(player);
+        console.log(player);
         $scope.$apply(function () {
           $scope.ready = player.ready;
         });
       });
 
       socketIo.on('other player toggled ready', function (player) {
+        player = CircularJSON.parse(player);
         $scope.$apply(function () {
-          $scope.room.players[player.id].ready = player.ready;
+          $scope.room.players.filter(function (p) {
+            return p.id === player.id;
+          }).forEach(function (p) {
+            p.ready = player.ready;
+          });
         });
       });
 
@@ -37,6 +44,12 @@ angular.module('codaApp')
       socketIo.on('game start', function () {
         $state.go('coda.game');
       });
+    }, function (res) {
+      switch (res.status) {
+        case 403:
+        case 404:
+          $state.go('coda.default');
+      }
     });
 
     $scope.init = function () {

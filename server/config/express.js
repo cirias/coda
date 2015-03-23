@@ -14,6 +14,7 @@ var cookieParser = require('cookie-parser');
 var errorHandler = require('errorhandler');
 var path = require('path');
 var config = require('./environment');
+var Player = require('../models/player');
 
 module.exports = function(app) {
   var env = app.get('env');
@@ -26,6 +27,21 @@ module.exports = function(app) {
   app.use(bodyParser.json());
   app.use(methodOverride());
   app.use(cookieParser());
+
+  // app.use(function (req, res, next) {
+  //   if (req.path !== '/coda') return next();
+
+  //   if (!req.cookies.player_id || !Player.get(req.cookies.player_id)) {
+  //     console.log('in here.', req.cookies.player_id);
+  //     var player = new Player();
+  //     res.cookie('player_id', player.id, {
+  //       expires: new Date(Date.now() + 86400000),
+  //       path: '/'
+  //     });
+  //   }
+
+  //   next();
+  // });
   
   if ('production' === env) {
     app.use(favicon(path.join(config.root, 'public', 'favicon.ico')));

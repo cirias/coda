@@ -3,15 +3,16 @@
 angular.module('codaApp')
   .controller('CodaDefaultCtrl', function ($scope, $state, Room, socketIo) {
     $scope.init = function () {
-      socketIo.on('room created', function (room) {
+      socketIo.on('room created', function () {
         $scope.rooms = Room.query();
       });
 
-      socketIo.on('room destroied', function (room) {
+      socketIo.on('room destroied', function () {
         $scope.rooms = Room.query();
       });
 
       socketIo.on('room joined', function (room) {
+        room = CircularJSON.parse(room);
         $state.go('coda.room', {
           id: room.id
         });
@@ -27,7 +28,7 @@ angular.module('codaApp')
 
     $scope.createRoom = function () {
       $scope.loading = true;
-      socketIo.emit('create room', $scope.params);
+      socketIo.emit('create room');
     };
 
     $scope.joinRoom = function (roomId) {

@@ -1,10 +1,7 @@
 'use strict';
 
 angular.module('codaApp')
-  .factory('socketIo', function () {
+  .factory('socketIo', function ($cookies) {
   	var socketIo = io();
-  	socketIo.on('set cookie', function (cookie) {
-      document.cookie = cookie;
-    });
     return socketIo;
   });
