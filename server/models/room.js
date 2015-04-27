@@ -51,7 +51,7 @@ Room.prototype.allReady = function() {
 };
 
 Room.prototype.startGame = function() {
-  this.game = new Game();
+  this.game = new Game(this.players);
   return this.game;
 };
 

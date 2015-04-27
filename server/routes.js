@@ -9,7 +9,7 @@ var errors = require('./components/errors');
 module.exports = function(app) {
 
   // Insert routes below
-  app.use('/coda', require('./api/coda'));
+  // app.use('/coda', require('./api/coda'));
   app.use('/api/rooms', require('./api/room'));
   
   // All undefined asset or api routes should return a 404

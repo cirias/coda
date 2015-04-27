@@ -6,6 +6,7 @@ var names   = Moniker.generator(
     {glue: ' '}
   );
 
+// All players store at here
 var players = {};
 
 var Player = function () {
@@ -24,12 +25,12 @@ Player.get = function (id) {
 	}
 };
 
-Player.prototype.toString = function() {
-	return {
-		id   : this.id,
-		name : this.name
-	};
-};
+// Player.prototype.toString = function() {
+// 	return {
+// 		id   : this.id,
+// 		name : this.name
+// 	};
+// };
 
 Player.prototype.destroy = function() {
 	this.leave();
@@ -77,7 +78,9 @@ Player.prototype.toggleReady = function() {
 Player.prototype.draw = function(index) {
 	if (!this.game.cards[index]) return;
 
-	return this.game.draw(this, index);
+  this.newCard = this.game.draw(index);
+
+	return this.newCard;
 };
 
 Player.prototype.place = function(index) {
@@ -86,58 +89,63 @@ Player.prototype.place = function(index) {
 	if (index > this.cards.length || index < 0) return;
 
 	this.cards.splice(index, 0, this.newCard);
-  this.newCardIndex = index;
   this.game.move();
 	delete this.newCard;
-	return this.cards;
-};
 
-Player.prototype.publish = function() {
   return {
-    game: game.publish(),
-    who: {
-      id           : this.id,
-      newCardIndex : this.newCardIndex
-      cards        : this.cards.map(function () {
-        return { color : card.color };
+    public: {
+      remainingCards: this.game.cards.map(function (card) {
+        return card ? { color: card.color } : null;
       }),
+      activePlayer: {
+        id        : this.id,
+        cardIndex : index,
+        cards     : this.cards.map(function (card) {
+          return { color: card.color };
+        })
+      }
+    },
+    private: {
+      cards: this.cards
     }
-  };
+  }
 };
 
 Player.prototype.guess = function(playerId, index, number) {
   var player = Player.get(playerId);
+
+  var right = player.check(index, number);
   this.game.move();
-  if (player.check(index, number)) {
-    return {
-      playerId : playerId,
-      index    : index,
-      number   : number
-    };
-  } else {
-    return {
-      playerId : this.id,
-      index    : this.newCardIndex,
-      number   : this.cards[this.newCardIndex].number
-    };
-  }
+  
+  return {
+    guess: {
+      playerId  : playerId,
+      cardIndex : index,
+      number    : number
+    },
+    expose: {
+      playerId  : right ? playerId : this.id,
+      cardIndex : right ? index : this.newCardIndex,
+      number    : right ? number : this.cards[this.newCardIndex].number
+    }
+  };
 };
 
 Player.prototype.check = function(index, number) {
   if (this.cards[index].number == number) {
-    this.cards[index].public = true;
-    if (!this.isAlive()) {
-      this.game.players.splice(this.game.players.indexOf(this), 1);
-      if (this.game.turn % this.game.players.length === 0) {
-        this.turn = 0;
-        this.round++;
-      }
-    }
+    this.cards[index].exposed = true;
+    this.isAlive()
 
     return true;
   } else {
     return false;
   }
+};
+
+Player.prototype.isAlive = function () {
+  return this.cards.reduce(function (alive, card) {
+    return alive || !card.exposed;
+  }, false);
 };
 
 module.exports = Player;

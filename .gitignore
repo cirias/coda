@@ -6,3 +6,6 @@ client/bower_components
 dist
 /server/config/local.env.js
 /client/app/.DS_Store
+
+*.swp
+*.swo

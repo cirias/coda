@@ -41,8 +41,10 @@ angular.module('codaApp')
         $state.go('coda.default');
       });
 
-      socketIo.on('game start', function () {
-        $state.go('coda.game');
+      socketIo.on('game start', function (id) {
+        $state.go('coda.game', {
+          id: id
+        });
       });
     }, function (res) {
       switch (res.status) {

@@ -2,43 +2,41 @@ var uuid = require('node-uuid');
 
 var Game = function (players) {
 	this.id = uuid.v1();
-    this.players = players;
+  this.players = players;
 	this.cards = generateShuffledCards();
 
 	players = shuffle(players);
-	link(players);
+	//link(players);
 	
 	this.round = 1;
 	this.phase = 'draw';
 	this.turn = 0;
-  this.activePlayer = players[0].id;
-};
-
-Game.prototype.publish = function() {
-  return {
-    cards: this.cards.map(function (card) {
-             return card ? { color: card.color } : null;
-           }),
-    round: this.round,
-    phase: this.phase,
-    turn: this.turn
-  };
+  this.activePlayerId = players[0].id;
 };
 
 Game.prototype.move = function() {
-  this.phase = this.phase === 'draw' ? 'guess' : 'draw';
+  if (this.round > 3) {
+    this.phase = this.phase === 'draw' ? 'guess' : 'draw';
+  }
+
   this.turn++;
-  if (this.turn % this.game.players.length === 0) {
+
+  if (this.turn >= this.game.players.length) {
     this.turn = 0;
     this.round++;
   }
 };
 
-Game.prototype.draw = function(player, index) {
-  player.newCard = this.cards[index];
+Game.prototype.draw = function(index) {
+  if (!this.cards[index])
+    return null;
+
+  var card = this.cards[index];
   this.cards[index] = null;
-  return player.newCard;
+  return card;
 };
+
+module.exports = Game;
 
 function generateShuffledCards (color) {
   var colors = ['black', 'white'];
